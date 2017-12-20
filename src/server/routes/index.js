@@ -15,4 +15,12 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.get('/signin', function (req, res, next) {
+  res.render('index');
+});
+
+router.get('/signout', function (req, res, next) {
+  res.render('index');
+});
+
 module.exports = router;

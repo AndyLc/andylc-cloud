@@ -6,10 +6,15 @@ exports.seed = (knex, Promise) => {
     const salt = bcrypt.genSaltSync();
     const hash = bcrypt.hashSync('johnson123', salt);
     return Promise.join(
-      knex('users').insert({
-        username: 'jeremy',
-        password: hash
-      })
+      knex('users').insert([
+        {
+          username: 'jeremy',
+          password: hash
+        }, {
+          username: 'Andy',
+          password: bcrypt.hashSync('password', salt)
+        }
+      ])
     );
   });
 };
