@@ -12,6 +12,7 @@
     const authCheckMiddleware = require('../auth/auth_check');
 
     // *** register routes *** //
+
     app.use('/api', authCheckMiddleware);
     app.use('/', routes);
     app.use('/auth', authRoutes);
