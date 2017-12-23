@@ -12,7 +12,7 @@ function createUser (req, res) {
     const hash = bcrypt.hashSync(req.body.password, salt);
     return knex('users')
         .insert({
-          username: req.body.username,
+          email: req.body.email,
           password: hash
         }).returning('*');
   })
@@ -47,12 +47,7 @@ function loginRedirect(req, res, next) {
 
 function handleErrors(req) {
   return new Promise((resolve, reject) => {
-    if (req.body.username.length < 6) {
-      reject({
-        message: 'Username must be longer than 6 characters'
-      });
-    }
-    else if (req.body.password.length < 6) {
+    if (req.body.password.length < 6) {
       reject({
         message: 'Password must be longer than 6 characters'
       });

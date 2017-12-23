@@ -1,0 +1,24 @@
+div.form-width-constraint {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+div.errors p {
+    color: red;
+}
+
+input[type="submit"] {
+  margin: 0 auto;
+  display: block;
+}
+
+form a {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+}

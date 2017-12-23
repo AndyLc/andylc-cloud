@@ -21,7 +21,7 @@ describe('GET /users/:id/edit', () => {
     it('should return a success', (done) => {
       passportStub.login({
         id: 1,
-        username: 'jeremy',
+        email: 'jeremy@gmail.com',
         password: 'johnson123'
       });
       chai.request(server)
@@ -38,7 +38,7 @@ describe('GET /users/:id/edit', () => {
     it('should deny access to page', (done) => {
       passportStub.login({
         id: 1,
-        username: 'jeremy',
+        email: 'jeremy@gmail.com',
         password: 'johnson123'
       });
       chai.request(server)
@@ -55,7 +55,7 @@ describe('GET /users/:id/edit', () => {
     it('should say no user exists', (done) => {
       passportStub.login({
         id: 1,
-        username: 'jeremy',
+        email: 'jeremy@gmail.com', //TODO: check for valid email format.
         password: 'johnson123'
       });
       chai.request(server)

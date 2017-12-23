@@ -26,7 +26,7 @@ describe('routes : auth', () => {
       chai.request(server)
       .post('/auth/register')
       .send({
-        username: 'michael',
+        email: 'michael@gmail.com',
         password: 'herman'
       })
       .end((err, res) => {
@@ -40,13 +40,13 @@ describe('routes : auth', () => {
     });
     it('should throw an error if a user is logged in', (done) => {
       passportStub.login({
-        username: 'jeremy',
+        email: 'jeremy@gmail.com',
         password: 'johnson123'
       });
       chai.request(server)
       .post('/auth/register')
       .send({
-        username: 'michael',
+        email: 'michael@gmail.com',
         password: 'herman'
       })
       .end((err, res) => {
@@ -58,27 +58,11 @@ describe('routes : auth', () => {
         done();
       });
     });
-    it('should throw an error if the username is < 6 characters', (done) => {
-      chai.request(server)
-      .post('/auth/register')
-      .send({
-        username: 'six',
-        password: 'herman'
-      })
-      .end((err, res) => {
-        should.exist(err);
-        res.redirects.length.should.eql(0);
-        res.status.should.eql(400);
-        res.type.should.eql('application/json');
-        res.body.status.should.eql('Username must be longer than 6 characters');
-        done();
-      });
-    });
     it('should throw an error if the password is < 6 characters', (done) => {
       chai.request(server)
       .post('/auth/register')
       .send({
-        username: 'michael',
+        email: 'michael@gmail.com',
         password: 'six'
       })
       .end((err, res) => {
@@ -97,7 +81,7 @@ describe('routes : auth', () => {
       chai.request(server)
       .post('/auth/login')
       .send({
-        username: 'jeremy',
+        email: 'jeremy@gmail.com',
         password: 'johnson123'
       })
       .end((err, res) => {
@@ -113,7 +97,7 @@ describe('routes : auth', () => {
       chai.request(server)
       .post('/auth/login')
       .send({
-        username: 'michael',
+        email: 'michael@gmail.com',
         password: 'johnson123'
       })
       .end((err, res) => {
@@ -127,13 +111,13 @@ describe('routes : auth', () => {
     });
     it('should throw an error if a user is logged in', (done) => {
       passportStub.login({
-        username: 'jeremy',
+        email: 'jeremy@gmail.com',
         password: 'johnson123'
       });
       chai.request(server)
       .post('/auth/login')
       .send({
-        username: 'jeremy',
+        email: 'jeremy@gmail.com',
         password: 'johnson123'
       })
       .end((err, res) => {
@@ -150,7 +134,7 @@ describe('routes : auth', () => {
   describe('GET /auth/logout', () => {
     it('should logout a user', (done) => {
       passportStub.login({
-        username: 'jeremy',
+        email: 'jeremy@gmail.com',
         password: 'johnson123'
       });
       chai.request(server)

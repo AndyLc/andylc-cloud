@@ -10,7 +10,7 @@ module.exports = {
     seeds: {
       directory: __dirname + '/src/server/db/seeds'
     },
-    debug: true
+    debug: false
   },
   test: {
     client: 'postgresql',
