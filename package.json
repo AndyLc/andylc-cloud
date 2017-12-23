@@ -4,7 +4,8 @@
   "scripts": {
     "start": "node ./src/server/server",
     "test": "./node_modules/mocha/bin/_mocha",
-    "testone": "./node_modules/mocha/bin/_mocha ./test/**/*$MATCH*.test.js"
+    "testone": "./node_modules/mocha/bin/_mocha ./test/**/*$MATCH*.test.js",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
     "bcryptjs": "^2.3.0",
