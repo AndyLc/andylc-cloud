@@ -38,8 +38,14 @@ class Profile extends Component {
           console.log(response);
         } else {
           response.json().then(function(data) {
-            console.log(data);
-            a.setState({devices: data.devices});
+            var devices = data.devices.map(function(obj) {
+               var rObj = {};
+               rObj["id"] = obj.id;
+               rObj["name"] = obj.name;
+               rObj["data"] = JSON.stringify(obj.data);
+               return rObj;
+            });
+            a.setState({devices: devices});
           });
         }
       })
@@ -100,7 +106,7 @@ class DeviceList extends Component {
                      <h5>{d.name}</h5>
                      <p>ID: {d.id}</p>
                      <p>Status: OFFLINE</p>
-                     <p>Data:</p>
+                     <p>Data: {d.data}</p>
                      <br/>
                    </div>;
           })}

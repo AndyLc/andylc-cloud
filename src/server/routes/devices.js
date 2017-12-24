@@ -31,7 +31,7 @@ router.get('/', (req, res, next)  => { //TODO: UPDATE TESTS
   .innerJoin('device_users', 'users.id', 'device_users.userId')
   .where('users.id', id)
   .innerJoin('devices', 'device_users.deviceId', 'devices.id')
-  .select('devices.id', 'name')
+  .select('devices.id', 'name', 'data')
   .then((results) => {
     return res.status(200).json({devices: results})
   })
