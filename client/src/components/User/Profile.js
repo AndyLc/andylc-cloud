@@ -1,12 +1,45 @@
 import React, { Component } from 'react';
 import Auth from '../Auth';
 import './Profile.css';
+import update from 'immutability-helper';
 
 class Profile extends Component {
+  fetchAndSet(obj, a, data, i) {
+    fetch(obj.code, {
+      method: 'GET',
+      headers: {
+        'Authorization': process.env.DEVICE_SECRET,
+      }
+    }).then(function(resp) {
+      resp.json().then(function(data) {
+        for (var j = 0; j < data.length; j++) {
+          console.log(data[j].device_name);
+          console.log(obj["name"]);
+          if (data[j].device_name == obj["name"]) {
+            console.log("true");
+            obj["data"] = data[j].device_data;
+          }
+        }
+        a.setState(update(a.state.devices,
+          { $splice: [[i, 1, obj]] }
+        ));
+      })
+    }).catch(function(err) {
+      for (var j = 0; j < data.length; j++) {
+        if (data[j].device_name == obj["name"]) {
+          obj["data"] = err.message;
+        }
+      }
+      a.setState(update(a.state.devices,
+        { $splice: [[i, 1, obj]] }
+      ));
+    })
+  }
   constructor() {
     super();
-    this.state = { email: '', error: '', name: '', devices: []};
+    this.state = { email: '', code: '', error: '', name: '', devices: []};
     this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
     this.createDevice = this.createDevice.bind(this);
   }
   componentDidMount() {
@@ -39,13 +72,13 @@ class Profile extends Component {
         } else {
           response.json().then(function(data) {
             var devices = data.devices.map(function(obj) {
-               var rObj = {};
-               rObj["id"] = obj.id;
-               rObj["name"] = obj.name;
-               rObj["data"] = JSON.stringify(obj.data);
-               return rObj;
-            });
+              obj.data = "FETCHING...";
+              return obj;
+            })
             a.setState({devices: devices});
+            for (var i = 0; i < a.state.devices.length; i++) {
+              a.fetchAndSet(a.state.devices[i], a, data, i);
+            }
           });
         }
       })
@@ -54,23 +87,31 @@ class Profile extends Component {
   handleNameChange(e) {
     this.setState({name: e.target.value});
   }
+  handleCodeChange(e) {
+    this.setState({code: e.target.value});
+  }
   createDevice(e) {
     e.preventDefault();
     var a = this;
     var name = this.state.name;
+    var code = this.state.code;
     fetch('/api/devices/create', {
       method: 'POST',
       body: JSON.stringify({
-        name: name
+        name: name,
+        code: code
       }),
-      headers: { "Content-Type": "application/json", "Authorization": Auth.getToken() }
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": Auth.getToken()
+      }
     }).then(function(response) {
       if (!response.ok) {
         console.log(response);
       } else {
         response.json().then(function(data) {
           console.log(data);
-          a.setState({devices: a.state.devices.concat({name: name, id: data.id})});
+          a.setState({devices: a.state.devices.concat({name: name, id: data.id, code: code})});
         });
       }
     })
@@ -89,6 +130,8 @@ class Profile extends Component {
             <form onSubmit={this.createDevice}>
               Device Name:<br/>
               <input type="text" onChange={this.handleNameChange} name="name"/><br/>
+              Device Code:<br/>
+              <input type="text" onChange={this.handleCodeChange} name="code"/><br/>
               <input type="submit" value="Create"/>
             </form>
           </div>
@@ -105,7 +148,7 @@ class DeviceList extends Component {
             return <div key={d.id}>
                      <h5>{d.name}</h5>
                      <p>ID: {d.id}</p>
-                     <p>Status: OFFLINE</p>
+                     <p>Code: {d.code}</p>
                      <p>Data: {d.data}</p>
                      <br/>
                    </div>;

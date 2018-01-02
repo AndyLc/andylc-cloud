@@ -9,6 +9,7 @@ router.post('/create', (req, res, next)  => { //TODO: UPDATE TESTS
   knex('devices')
   .insert({
     name: req.body.name,
+    code: req.body.code
   })
   .returning("id")
   .then(function (did) {
@@ -31,7 +32,7 @@ router.get('/', (req, res, next)  => { //TODO: UPDATE TESTS
   .innerJoin('device_users', 'users.id', 'device_users.userId')
   .where('users.id', id)
   .innerJoin('devices', 'device_users.deviceId', 'devices.id')
-  .select('devices.id', 'name', 'data')
+  .select('devices.id', 'name', 'code')
   .then((results) => {
     return res.status(200).json({devices: results})
   })
