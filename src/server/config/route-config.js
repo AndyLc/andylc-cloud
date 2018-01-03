@@ -13,15 +13,15 @@
 
     // *** register routes *** //
 
-    app.use('/api', authCheckMiddleware);
-    app.use('/', routes);
-    app.use('/profile', function (req, res, next) {
+    app.use(function (req, res, next) {
       if (req.headers['x-forwarded-proto'] === 'https') {
         res.redirect('http://' + req.hostname + req.url);
       } else {
         next();
       }
     });
+    app.use('/api', authCheckMiddleware);
+    app.use('/', routes);
     app.use('/auth', authRoutes);
     app.use('/api/users', usersRoutes);
     app.use('/api/devices', devicesRoutes);
