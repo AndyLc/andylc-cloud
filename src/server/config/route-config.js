@@ -18,7 +18,13 @@
     app.use('/auth', authRoutes);
     app.use('/api/users', usersRoutes);
     app.use('/api/devices', devicesRoutes);
-
+    app.use('/api/devices', function (req, res, next) {
+      if (req.headers['x-forwarded-proto'] === 'https') {
+        res.redirect('http://' + req.hostname + req.url);
+      } else {
+        next();
+      }
+    });
   };
 
 })(module.exports);
