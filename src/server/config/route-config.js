@@ -15,16 +15,16 @@
 
     app.use('/api', authCheckMiddleware);
     app.use('/', routes);
-    app.use('/auth', authRoutes);
-    app.use('/api/users', usersRoutes);
-    app.use('/api/devices', devicesRoutes);
-    app.use('/api/devices', function (req, res, next) {
+    app.use('/profile', function (req, res, next) {
       if (req.headers['x-forwarded-proto'] === 'https') {
         res.redirect('http://' + req.hostname + req.url);
       } else {
         next();
       }
     });
+    app.use('/auth', authRoutes);
+    app.use('/api/users', usersRoutes);
+    app.use('/api/devices', devicesRoutes);
   };
 
 })(module.exports);
