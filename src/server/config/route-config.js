@@ -12,14 +12,6 @@
     const authCheckMiddleware = require('../auth/auth_check');
 
     // *** register routes *** //
-
-    app.use(function (req, res, next) {
-      if (req.headers['x-forwarded-proto'] === 'https') {
-        res.redirect('http://' + req.hostname + req.url);
-      } else {
-        next();
-      }
-    });
     app.use('/api', authCheckMiddleware);
     app.use('/', routes);
     app.use('/auth', authRoutes);
