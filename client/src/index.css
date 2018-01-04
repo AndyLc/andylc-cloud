@@ -2816,14 +2816,6 @@
 
 /* Nav */
 
-	@media screen and (max-width: 980px) {
-
-		#nav {
-			display: none;
-		}
-
-	}
-
 	#navPanel {
 		-moz-transform: translatex(20em);
 		-webkit-transform: translatex(20em);

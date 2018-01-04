@@ -119,7 +119,7 @@ class Profile extends Component {
   render() {
     return (
         <div className="inner">
-          <a onClick={this.loadDeviceData}>RELOAD DATA</a>
+          <a className="reload-data" onClick={this.loadDeviceData}>RELOAD DATA</a>
           <h3>Profile for {this.state.email}</h3>
           <div className="Devices">
           <h4>Your Devices</h4>

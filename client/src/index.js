@@ -27,7 +27,6 @@ ReactDOM.render((
             <nav id="nav">
                 <Nav/>
             </nav>
-            <a href="#navPanel" className="navPanelToggle"><span className="fa fa-bars"></span></a>
         </div>
     </header>
     <Route exact path="/" component={App}/>
