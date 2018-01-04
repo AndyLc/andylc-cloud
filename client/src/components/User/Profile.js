@@ -13,10 +13,7 @@ class Profile extends Component {
     }).then(function(resp) {
       resp.json().then(function(data) {
         for (var j = 0; j < data.length; j++) {
-          console.log(data[j].device_name);
-          console.log(obj["name"]);
           if (data[j].device_name == obj["name"]) {
-            console.log("true");
             obj["data"] = data[j].device_data;
           }
         }
@@ -41,6 +38,29 @@ class Profile extends Component {
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
     this.createDevice = this.createDevice.bind(this);
+    this.loadDeviceData = this.loadDeviceData.bind(this);
+  }
+  loadDeviceData() {
+    var a = this;
+    fetch('/api/devices', {
+      method: 'GET',
+      headers: { "Authorization": Auth.getToken() }
+    }).then(function(response) {
+      if (!response.ok) {
+        console.log(response);
+      } else {
+        response.json().then(function(data) {
+          var devices = data.devices.map(function(obj) {
+            obj.data = "FETCHING...";
+            return obj;
+          })
+          a.setState({devices: devices});
+          for (var i = 0; i < a.state.devices.length; i++) {
+            a.fetchAndSet(a.state.devices[i], a, data, i);
+          }
+        });
+      }
+    })
   }
   componentDidMount() {
     document.body.classList.toggle('subpage', true);
@@ -62,26 +82,7 @@ class Profile extends Component {
           });
         }
       })
-
-      fetch('/api/devices', {
-        method: 'GET',
-        headers: { "Authorization": Auth.getToken() }
-      }).then(function(response) {
-        if (!response.ok) {
-          console.log(response);
-        } else {
-          response.json().then(function(data) {
-            var devices = data.devices.map(function(obj) {
-              obj.data = "FETCHING...";
-              return obj;
-            })
-            a.setState({devices: devices});
-            for (var i = 0; i < a.state.devices.length; i++) {
-              a.fetchAndSet(a.state.devices[i], a, data, i);
-            }
-          });
-        }
-      })
+      a.loadDeviceData();
     }
   }
   handleNameChange(e) {
@@ -110,7 +111,6 @@ class Profile extends Component {
         console.log(response);
       } else {
         response.json().then(function(data) {
-          console.log(data);
           a.setState({devices: a.state.devices.concat({name: name, id: data.id, code: code})});
         });
       }
@@ -119,6 +119,7 @@ class Profile extends Component {
   render() {
     return (
         <div className="inner">
+          <a onClick={this.loadDeviceData}>RELOAD DATA</a>
           <h3>Profile for {this.state.email}</h3>
           <div className="Devices">
           <h4>Your Devices</h4>
